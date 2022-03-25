@@ -1,7 +1,7 @@
 name: "Build AWS Lambda Extension"
 description: "Creates a packaged Lambda layer including the Sentry Lambda extension."
 inputs:
-  name:
+  artifact_name:
     description: Name of the prepared articact to package into an Lambda extension
     required: true
 runs:
@@ -9,7 +9,7 @@ runs:
   steps:
     - uses: actions/download-artifact@v2
       with:
-        name: ${{ github.sha }}
+        name: ${{ inputs.artifact_name }}
     - name: Create directory
       shell: bash
       run: |
