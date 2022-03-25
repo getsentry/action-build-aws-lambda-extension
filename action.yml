@@ -1,6 +1,9 @@
 name: "Build AWS Lambda Extension"
 description: "Creates a packaged Lambda layer including the Sentry Lambda extension."
-
+inputs:
+  name:
+    description: Name of the prepared articact to package into an Lambda extension
+    required: true
 runs:
   using: "build"
   steps:
