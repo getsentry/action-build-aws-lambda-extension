@@ -31,5 +31,5 @@ runs:
     - name: Upload zip
       uses: actions/upload-artifact@v3
       with:
-        name: ${{ artifact_name }}
+        name: ${{ inputs.artifact_name }}
         path: ${{ inputs.zip_file_name }}
