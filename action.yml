@@ -10,14 +10,17 @@ runs:
     - uses: actions/download-artifact@v2
       with:
         name: ${{ github.sha }}
-    - run: |
+    - name: Create directory
+      shell: bash
+      run: |
         ls -alh
         mkdir sentry-lambda-layer/extensions
         echo "pwd $$ ls -alh" > sentry-lambda-layer/extensions/my-extension.sh
         chmod +x sentry-lambda-layer/extensions/my-extension.sh
         curl -0 --silent --output sentry-lambda-layer/relay `curl -s https://release-registry.services.sentry.io/apps/relay/latest | jq -r .files.\"relay-Linux-x86_64\".url`
-
-    - run: |
+    - name: Zip directory
+      shell: bash
+      run: |
         zip -r sentry-lambda-layer.zip sentry-lambda-layer/
         ls -alh
         echo "im zip"
