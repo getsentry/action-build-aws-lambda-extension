@@ -5,7 +5,7 @@ inputs:
     description: Name of the prepared articact to package into an Lambda extension
     required: true
 runs:
-  using: "build"
+  using: "composite"
   steps:
     - uses: actions/download-artifact@v2
       with:
