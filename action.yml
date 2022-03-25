@@ -4,10 +4,13 @@ inputs:
   artifact_name:
     description: Name of the prepared articact to package into an Lambda extension
     required: true
+  zip_file_name:
+    description: Name of the zip file that will be created
+    required: true
 runs:
   using: "composite"
   steps:
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v3
       with:
         name: ${{ inputs.artifact_name }}
     - name: Create directory
@@ -21,7 +24,12 @@ runs:
     - name: Zip directory
       shell: bash
       run: |
-        zip -r sentry-lambda-layer.zip sentry-lambda-layer/
+        zip -r ${{ inputs.zip_file_name }} sentry-lambda-layer/
         ls -alh
         echo "im zip"
-        unzip -Z1 sentry-lambda-layer.zip
+        unzip -Z1 ${{ inputs.zip_file_name }}
+    - name: Upload zip
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ artifact_name }}
+        path: ${{ inputs.zip_file_name }}
