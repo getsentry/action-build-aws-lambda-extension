@@ -16,15 +16,14 @@ runs:
     - name: Create directory
       shell: bash
       run: |
-        ls -alh
-        mkdir sentry-lambda-layer/extensions
-        echo "pwd $$ ls -alh" > sentry-lambda-layer/extensions/my-extension.sh
-        chmod +x sentry-lambda-layer/extensions/my-extension.sh
-        curl -0 --silent --output sentry-lambda-layer/relay `curl -s https://release-registry.services.sentry.io/apps/relay/latest | jq -r .files.\"relay-Linux-x86_64\".url`
+        ls -alh dist-serverless
+        mkdir -p dist-serverless/extensions
+        curl -0 --silent --output dist-serverless/extensions/sentry-lambda-extension `curl -s https://release-registry.services.sentry.io/apps/sentry-lambda-extension/latest | jq -r .files.\"sentry-lambda-extension\".url`
+        chmod +x dist-serverless/extensions/sentry-lambda-extension
     - name: Zip directory
       shell: bash
       run: |
-        zip -r ${{ inputs.zip_file_name }} sentry-lambda-layer/
+        zip -r ${{ inputs.zip_file_name }} dist-serverless/
         ls -alh
         echo "im zip"
         unzip -Z1 ${{ inputs.zip_file_name }}
