@@ -25,8 +25,7 @@ runs:
       shell: bash
       run: |
         zip -r ${{ inputs.zip_file_name }} dist-serverless/ -x \*__pycache__\* -x \*.yml
-        ls -alh
-        echo "im zip"
+        echo "Contents of the created ZIP file:"
         unzip -Z1 ${{ inputs.zip_file_name }}
     - name: Upload zip
       uses: actions/upload-artifact@v3
