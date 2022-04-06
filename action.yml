@@ -24,7 +24,7 @@ runs:
     - name: Zip directory
       shell: bash
       run: |
-        zip -r ${{ inputs.zip_file_name }} dist-serverless/
+        zip -r ${{ inputs.zip_file_name }} dist-serverless/ -x \*__pycache__\* -x \*.yml
         ls -alh
         echo "im zip"
         unzip -Z1 ${{ inputs.zip_file_name }}
