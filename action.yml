@@ -16,17 +16,15 @@ runs:
     - name: Create directory
       shell: bash
       run: |
-        echo "in action:"
-        ls -alh dist-serverless
         mkdir -p dist-serverless/extensions
         curl -0 --silent --output dist-serverless/extensions/sentry-lambda-extension `curl -s https://release-registry.services.sentry.io/apps/sentry-lambda-extension/latest | jq -r .files.\"sentry-lambda-extension\".url`
         chmod +x dist-serverless/extensions/sentry-lambda-extension
     - name: Zip directory
       shell: bash
       run: |
+        echo "Creating ${{ inputs.zip_file_name }}..."
         zip -r ${{ inputs.zip_file_name }} dist-serverless/ -x \*__pycache__\* -x \*.yml
-        ls -alh
-        echo "im zip"
+        echo "Contents of the created ZIP file:"
         unzip -Z1 ${{ inputs.zip_file_name }}
     - name: Upload zip
       uses: actions/upload-artifact@v3
