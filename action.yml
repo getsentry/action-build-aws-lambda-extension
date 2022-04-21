@@ -7,18 +7,36 @@ inputs:
   zip_file_name:
     description: Name of the zip file that will be created
     required: true
+  extension_port:
+    description: Port the extension should be running on
+    required: true
+  extension_upstream:
+    description: Upstream URL the extension should send data to
+    required: true
+
 runs:
   using: "composite"
   steps:
     - uses: actions/download-artifact@v3
       with:
         name: ${{ inputs.artifact_name }}
-    - name: Create directory
+    - name: Download and configure extension
       shell: bash
       run: |
+        echo "Downloading extension..."
         mkdir -p dist-serverless/extensions
         curl -0 --silent --output dist-serverless/extensions/sentry-lambda-extension `curl -s https://release-registry.services.sentry.io/apps/sentry-lambda-extension/latest | jq -r .files.\"sentry-lambda-extension\".url`
         chmod +x dist-serverless/extensions/sentry-lambda-extension
+        echo "Setting configuration for extension..."
+        cat << EOT >> dist-serverless/extensions/.relay/config.yml
+        ---
+        relay:
+          mode: proxy
+          upstream: "${{ inputs.extension_upstream }}"
+          host: 127.0.0.1
+          port: ${{ inputs.extension_port }}
+        EOT
+
     - name: Zip directory
       shell: bash
       run: |
