@@ -35,6 +35,8 @@ runs:
           upstream: "${{ inputs.extension_upstream }}"
           host: 127.0.0.1
           port: ${{ inputs.extension_port }}
+        limits:
+          shutdown_timeout: 2
         EOT
 
     - name: Zip directory
