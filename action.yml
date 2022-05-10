@@ -43,7 +43,9 @@ runs:
       shell: bash
       run: |
         echo "Creating ${{ inputs.zip_file_name }}..."
-        zip -r ${{ inputs.zip_file_name }} dist-serverless/ -x \*__pycache__\* -x \*.yml
+        cd dist-serverless
+        zip -r ../${{ inputs.zip_file_name }} . --exclude \*__pycache__\* --exclude \*.yml
+        cd ..
         echo "Contents of the created ZIP file:"
         unzip -Z1 ${{ inputs.zip_file_name }}
     - name: Upload zip
