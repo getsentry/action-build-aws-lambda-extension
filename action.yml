@@ -27,17 +27,6 @@ runs:
         mkdir -p dist-serverless/extensions
         curl -0 --silent --output dist-serverless/extensions/sentry-lambda-extension `curl -s https://release-registry.services.sentry.io/apps/sentry-lambda-extension/latest | jq -r .files.\"sentry-lambda-extension\".url`
         chmod +x dist-serverless/extensions/sentry-lambda-extension
-        echo "Setting configuration for extension..."
-        cat << EOT >> dist-serverless/extensions/.relay/config.yml
-        ---
-        relay:
-          mode: proxy
-          upstream: "${{ inputs.extension_upstream }}"
-          host: 127.0.0.1
-          port: ${{ inputs.extension_port }}
-        limits:
-          shutdown_timeout: 2
-        EOT
 
     - name: Zip directory
       shell: bash
