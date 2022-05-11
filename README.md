@@ -16,7 +16,7 @@ steps:
     - run: |
         echo "Create the Lambda in the dist-serverless directory"
         mkdir dist-serverless
-        copy stuff/* dist-serverless/
+        cp -r stuff/* dist-serverless/
 
     - uses: actions/upload-artifact@v3
     with:
