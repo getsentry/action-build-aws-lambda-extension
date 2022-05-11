@@ -47,12 +47,10 @@ https://github.com/getsentry/sentry-python/blob/master/.github/workflows/ci.yml
 
 The following are all _required_.
 
-| name                 | description                                                 |
-| -------------------- | ----------------------------------------------------------- |
-| `artifact_name`      | Name of the artifact containing the Lambda layer directory. |
-| `zip_file_name`      | The name the generated .zip file should have.               |
-| `extension_port`     | Port the extension should be running on.                    |
-| `extension_upstream` | Upstream URL the extension should send data to.             |
+| name            | description                                                 |
+| --------------- | ----------------------------------------------------------- |
+| `artifact_name` | Name of the artifact containing the Lambda layer directory. |
+| `zip_file_name` | The name the generated .zip file should have.               |
 
 ## Contributing
 
