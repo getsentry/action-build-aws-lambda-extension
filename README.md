@@ -47,10 +47,11 @@ https://github.com/getsentry/sentry-python/blob/master/.github/workflows/ci.yml
 
 The following are all _required_.
 
-| name            | description                                                 |
-| --------------- | ----------------------------------------------------------- |
-| `artifact_name` | Name of the artifact containing the Lambda layer directory. |
-| `zip_file_name` | The name the generated .zip file should have.               |
+| name                | description                                                                   |
+| ------------------- | ----------------------------------------------------------------------------- |
+| `artifact_name`     | Name of the artifact containing the Lambda layer directory.                   |
+| `zip_file_name`     | The name the generated .zip file should have.                                 |
+| `preserve_symlinks` | Boolean when set to true the symblic links will be preserved in the zip file. |
 
 ## Contributing
 
