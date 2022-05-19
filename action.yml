@@ -7,6 +7,9 @@ inputs:
   zip_file_name:
     description: Name of the zip file that will be created
     required: true
+  preserve_symlinks>
+    description: Should symbolic links be preserved in the .zip file
+    required: false
 
 runs:
   using: "composite"
@@ -24,10 +27,11 @@ runs:
 
     - name: Zip directory
       shell: bash
+      # TODO: does the `-y` in the zip command need single quotes around it?
       run: |
         echo "Creating ${{ inputs.zip_file_name }}..."
         cd dist-serverless
-        zip -r ../${{ inputs.zip_file_name }} . --exclude \*__pycache__\* --exclude \*.yml
+        zip -r ${{ inputs.preserve_symlinks && -y }} ../${{ inputs.zip_file_name }} . --exclude \*__pycache__\* --exclude \*.yml
         cd ..
         echo "Contents of the created ZIP file:"
         unzip -Z1 ${{ inputs.zip_file_name }}
