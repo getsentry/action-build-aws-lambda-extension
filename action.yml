@@ -7,7 +7,7 @@ inputs:
   zip_file_name:
     description: Name of the zip file that will be created
     required: true
-  preserve_symlinks>
+  preserve_symlinks:
     description: Should symbolic links be preserved in the .zip file
     required: false
 
