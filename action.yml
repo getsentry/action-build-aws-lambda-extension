@@ -31,7 +31,7 @@ runs:
       run: |
         echo "Creating ${{ inputs.zip_file_name }}..."
         cd dist-serverless
-        zip -r ${{ inputs.preserve_symlinks && -y }} ../${{ inputs.zip_file_name }} . --exclude \*__pycache__\* --exclude \*.yml
+        zip -r ${{ inputs.preserve_symlinks && '-y' }} ../${{ inputs.zip_file_name }} . --exclude \*__pycache__\* --exclude \*.yml
         cd ..
         echo "Contents of the created ZIP file:"
         unzip -Z1 ${{ inputs.zip_file_name }}
