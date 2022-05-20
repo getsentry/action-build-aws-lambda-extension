@@ -1,21 +1,17 @@
-name: "Build AWS Lambda Extension"
-description: "Creates a packaged Lambda layer including the Sentry Lambda extension."
+name: "Build AWS Lambda Layer"
+description: "Creates a Lambda layer including the Sentry SDK and the Sentry Lambda extension."
 inputs:
   artifact_name:
-    description: Name of the prepared articact to package into an Lambda extension
+    description: Name of the prepared articact the Lambda Layer zip file should be uploaded to
     required: true
   zip_file_name:
     description: Name of the zip file that will be created
     required: true
-  preserve_symlinks:
-    description: Should symbolic links be preserved in the .zip file
-    required: false
-    default: false
-  build_cache_path:
-    description: Paths of the build cache
-    required: true
   build_cache_key:
     description: Build cache key
+    required: true
+  build_cache_paths:
+    description: Paths of the build cache
     required: true
 runs:
   using: "composite"
@@ -24,41 +20,29 @@ runs:
       uses: actions/cache@v2
       id: cache_built_packages
       with:
-        path: ${{ inputs.build_cache_path }}
+        path: ${{ inputs.build_cache_paths }}
         key: ${{ inputs.build_cache_key }}
-    # - uses: actions/download-artifact@v3
-    #   with:
-    #     name: ${{ inputs.artifact_name }}
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
-    - name: Download and configure extension
+    - name: Download and configure Sentry Lambda extension
       shell: bash
       run: |
-        echo "Downloading extension..."
+        echo "Downloading Sentry Lambda extension..."
         mkdir -p dist-serverless/extensions
         curl -0 --silent --output dist-serverless/extensions/sentry-lambda-extension `curl -s https://release-registry.services.sentry.io/apps/sentry-lambda-extension/latest | jq -r .files.\"sentry-lambda-extension\".url`
         chmod +x dist-serverless/extensions/sentry-lambda-extension
-    - name: Check for symlink
-      shell: bash
-      run: |
-        echo "--------------------"
-        ls -laR packages/serverless/build/aws/dist-serverless/
-        echo " XXX packages/serverless/build/aws/dist-serverless/nodejs/node_modules/@sentry/serverless/dist should be a symlink"
-        echo "--------------------"
-    - name: Zip directory
+        echo "Done downloading Sentry Lambda extension..."
+    - name: Create Lambda Layer zip
       shell: bash
       run: |
         echo "Creating ${{ inputs.zip_file_name }}..."
-        echo "${{ inputs.preserve_symlinks }}"
-        echo "${{ inputs.preserve_symlinks && '-y' }}"
         cd dist-serverless
-        zip -r ${{ inputs.preserve_symlinks && '-y' }} ../${{ inputs.zip_file_name }} . --exclude \*__pycache__\* --exclude \*.yml
+        # preserving symlinks with -y is important for Node based Layers!
+        zip -r -y ../${{ inputs.zip_file_name }} . --exclude \*__pycache__\* --exclude \*.yml
         cd ..
         echo "Done creating ${{ inputs.zip_file_name }}."
 
-        echo "Contents of the created ZIP file:"
+        echo "Contents of the created zip file:"
         unzip -Z ${{ inputs.zip_file_name }}
-    - name: Upload zip
+    - name: Upload zip (will be picked up by Craft for deployment)
       uses: actions/upload-artifact@v3
       with:
         name: ${{ inputs.artifact_name }}

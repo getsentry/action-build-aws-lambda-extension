@@ -7,23 +7,25 @@ This GitHub action will create a ZIP file containing:
 
 ## Prerequesites
 
-Befor you can use this action to bundle Lambda Layer and the Sentry Lambda extension together you need to prepare your Lambda Layer in a directory called `/dist-serverless` and upload with [actions/upload-artifact@v3](https://github.com/actions/upload-artifact)
+Befor you can use this action to bundle Lambda Layer and the Sentry Lambda extension together
+you need to prepare your Lambda Layer in a directory called `/dist-serverless`:
 
-Example how to do this:
+A very basic example would be:
 
 ```yaml
 steps:
-    - run: |
-        echo "Create the Lambda in the dist-serverless directory"
-        mkdir dist-serverless
-        cp -r stuff/* dist-serverless/
-
-    - uses: actions/upload-artifact@v3
-    with:
-        name: ${{ github.sha }}
-        path: |
-        dist-serverless/*
+  - run: |
+      echo "Create the Lambda in the dist-serverless directory"
+      mkdir dist-serverless
+      cp -r stuff/* dist-serverless/
 ```
+
+You also have to make sure to include this directory in the build cache you need to set up
+using the [actions/cache@v3](https://github.com/actions/cache) Github action.
+
+How this is done you can learn in the build workflow of the Javascript SDK:
+
+https://github.com/getsentry/sentry-javascript/blob/master/.github/workflows/build.yml
 
 ## Usage
 
@@ -49,9 +51,10 @@ The following are all _required_.
 
 | name                | description                                                                   |
 | ------------------- | ----------------------------------------------------------------------------- |
-| `artifact_name`     | Name of the artifact containing the Lambda layer directory.                   |
-| `zip_file_name`     | The name the generated .zip file should have.                                 |
-| `preserve_symlinks` | Boolean when set to true the symblic links will be preserved in the zip file. |
+| `artifact_name`     | Name of the prepared articact the Lambda Layer zip file should be uploaded to |
+| `zip_file_name`     | Name of the zip file that will be created                                     |
+| `build_cache_key`   | Build cache key                                                               |
+| `build_cache_paths` | Paths of the build cache                                                      |
 
 ## Contributing
 
