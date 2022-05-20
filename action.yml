@@ -29,7 +29,7 @@ runs:
       - name: Check for symlink
         run: |
           echo "--------------------"
-          la -R
+          ls -laR dist-serverless/
           echo " XXX dist-serverless/nodejs/node_modules/@sentry/serverless/dist should be a symlink"
           echo "--------------------"
 
