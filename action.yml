@@ -10,6 +10,7 @@ inputs:
   preserve_symlinks:
     description: Should symbolic links be preserved in the .zip file
     required: false
+    default: false
 
 runs:
   using: "composite"
@@ -33,8 +34,10 @@ runs:
         cd dist-serverless
         zip -r ${{ inputs.preserve_symlinks && '-y' }} ../${{ inputs.zip_file_name }} . --exclude \*__pycache__\* --exclude \*.yml
         cd ..
+        echo "Done creating ${{ inputs.zip_file_name }}."
+
         echo "Contents of the created ZIP file:"
-        unzip -Z1 ${{ inputs.zip_file_name }}
+        unzip -Z ${{ inputs.zip_file_name }}
     - name: Upload zip
       uses: actions/upload-artifact@v3
       with:
