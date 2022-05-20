@@ -37,6 +37,8 @@ runs:
       # TODO: does the `-y` in the zip command need single quotes around it?
       run: |
         echo "Creating ${{ inputs.zip_file_name }}..."
+        echo "${{ inputs.preserve_symlinks }}"
+        echo "${{ inputs.preserve_symlinks && '-y' }}"
         cd dist-serverless
         zip -r ${{ inputs.preserve_symlinks && '-y' }} ../${{ inputs.zip_file_name }} . --exclude \*__pycache__\* --exclude \*.yml
         cd ..
