@@ -11,13 +11,26 @@ inputs:
     description: Should symbolic links be preserved in the .zip file
     required: false
     default: false
-
+  build_cache_path:
+    description: Paths of the build cache
+    required: true
+  build_cache_key:
+    description: Build cache key
+    required: true
 runs:
   using: "composite"
   steps:
-    - uses: actions/download-artifact@v3
+    - name: Check build cache
+      uses: actions/cache@v2
+      id: cache_built_packages
       with:
-        name: ${{ inputs.artifact_name }}
+        path: ${{ inputs.build_cache_path }}
+        key: ${{ inputs.build_cache_key }}
+    # - uses: actions/download-artifact@v3
+    #   with:
+    #     name: ${{ inputs.artifact_name }}
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
     - name: Download and configure extension
       shell: bash
       run: |
@@ -26,11 +39,10 @@ runs:
         curl -0 --silent --output dist-serverless/extensions/sentry-lambda-extension `curl -s https://release-registry.services.sentry.io/apps/sentry-lambda-extension/latest | jq -r .files.\"sentry-lambda-extension\".url`
         chmod +x dist-serverless/extensions/sentry-lambda-extension
     - name: Check for symlink
-      shell: bash
       run: |
         echo "--------------------"
-        ls -laR dist-serverless/
-        echo " XXX dist-serverless/nodejs/node_modules/@sentry/serverless/dist should be a symlink"
+        ls -laR packages/serverless/build/aws/dist-serverless/
+        echo " XXX packages/serverless/build/aws/dist-serverless/nodejs/node_modules/@sentry/serverless/dist should be a symlink"
         echo "--------------------"
     - name: Zip directory
       shell: bash
