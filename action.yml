@@ -28,8 +28,9 @@ runs:
 
       - name: Check for symlink
         run: |
-          echo "--------- this should be a symlink -----------"
-          ls -l dist-serverless/nodejs/node_modules/@sentry/serverless/dist
+          echo "--------------------"
+          la -R
+          echo " XXX dist-serverless/nodejs/node_modules/@sentry/serverless/dist should be a symlink"
           echo "--------------------"
 
     - name: Zip directory
