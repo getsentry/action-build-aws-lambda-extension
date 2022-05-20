@@ -39,6 +39,7 @@ runs:
         curl -0 --silent --output dist-serverless/extensions/sentry-lambda-extension `curl -s https://release-registry.services.sentry.io/apps/sentry-lambda-extension/latest | jq -r .files.\"sentry-lambda-extension\".url`
         chmod +x dist-serverless/extensions/sentry-lambda-extension
     - name: Check for symlink
+      shell: bash
       run: |
         echo "--------------------"
         ls -laR packages/serverless/build/aws/dist-serverless/
@@ -46,7 +47,6 @@ runs:
         echo "--------------------"
     - name: Zip directory
       shell: bash
-      # TODO: does the `-y` in the zip command need single quotes around it?
       run: |
         echo "Creating ${{ inputs.zip_file_name }}..."
         echo "${{ inputs.preserve_symlinks }}"
