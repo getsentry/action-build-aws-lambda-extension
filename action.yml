@@ -25,14 +25,12 @@ runs:
         mkdir -p dist-serverless/extensions
         curl -0 --silent --output dist-serverless/extensions/sentry-lambda-extension `curl -s https://release-registry.services.sentry.io/apps/sentry-lambda-extension/latest | jq -r .files.\"sentry-lambda-extension\".url`
         chmod +x dist-serverless/extensions/sentry-lambda-extension
-
     - name: Check for symlink
       run: |
         echo "--------------------"
         ls -laR dist-serverless/
         echo " XXX dist-serverless/nodejs/node_modules/@sentry/serverless/dist should be a symlink"
         echo "--------------------"
-
     - name: Zip directory
       shell: bash
       # TODO: does the `-y` in the zip command need single quotes around it?
