@@ -22,8 +22,6 @@ runs:
       with:
         path: ${{ inputs.build_cache_paths }}
         key: ${{ inputs.build_cache_key }}
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
     - name: Download and configure Sentry Lambda extension
       shell: bash
       run: |
