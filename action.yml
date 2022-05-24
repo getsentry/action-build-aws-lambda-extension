@@ -13,6 +13,13 @@ inputs:
   build_cache_paths:
     description: Paths of the build cache
     required: true
+on:
+  workflow_dispatch:
+    inputs:
+      debug_enabled:
+        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'     
+        required: false
+        default: false
 runs:
   using: "composite"
   steps:
@@ -30,6 +37,9 @@ runs:
         curl -0 --silent --output dist-serverless/extensions/sentry-lambda-extension `curl -s https://release-registry.services.sentry.io/apps/sentry-lambda-extension/latest | jq -r .files.\"sentry-lambda-extension\".url`
         chmod +x dist-serverless/extensions/sentry-lambda-extension
         echo "Done downloading Sentry Lambda extension..."
+    - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled }}        
     - name: Create Lambda Layer zip
       shell: bash
       run: |
@@ -42,6 +52,9 @@ runs:
 
         echo "Contents of the created zip file:"
         unzip -Z ${{ inputs.zip_file_name }}
+    - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled }}        
     - name: Upload zip (will be picked up by Craft for deployment)
       uses: actions/upload-artifact@v3
       with:
