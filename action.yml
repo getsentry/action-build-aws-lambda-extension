@@ -22,14 +22,27 @@ runs:
       with:
         path: ${{ inputs.build_cache_paths }}
         key: ${{ inputs.build_cache_key }}
-    - name: Download and configure Sentry Lambda extension
+    - name: Download latest relay
       shell: bash
       run: |
-        echo "Downloading Sentry Lambda extension..."
+        echo "Downloading relay..."
         mkdir -p dist-serverless/extensions
-        curl -0 --silent --output dist-serverless/extensions/sentry-lambda-extension `curl -s https://release-registry.services.sentry.io/apps/sentry-lambda-extension/latest | jq -r .files.\"sentry-lambda-extension\".url`
+        curl -0 --silent \
+            --output dist-serverless/extensions/relay \
+            `curl -s https://release-registry.services.sentry.io/apps/relay/latest | jq -r .files.\"relay-Linux-x86_64\".url`
+        chmod +x dist-serverless/extensions/relay
+        echo "Done downloading relay."
+    - name: Configure Lambda extension to start relay
+      shell: bash
+      run: |
+        echo "Creating start script..."
+        cat > dist-serverless/extensions/sentry-lambda-extension << EOT
+#!/usr/bin/env bash
+set -euo pipefail
+./relay run
+        EOT
         chmod +x dist-serverless/extensions/sentry-lambda-extension
-        echo "Done downloading Sentry Lambda extension..."
+        echo "Done creating start script."
     - name: Create Lambda Layer zip
       shell: bash
       run: |
