@@ -41,6 +41,10 @@ steps:
         zip_file_name: sentry-python-serverless.zip
 ```
 
+This test script illustrates the usage of the action:
+
+[.github/workflows/test_production.yml](.github/workflows/test_production.yml)
+
 For an full example usage see the Sentry Python SDK:
 
 https://github.com/getsentry/sentry-python/blob/master/.github/workflows/ci.yml
@@ -49,12 +53,17 @@ https://github.com/getsentry/sentry-python/blob/master/.github/workflows/ci.yml
 
 The following are all _required_.
 
-| name                | description                                                                   |
-| ------------------- | ----------------------------------------------------------------------------- |
-| `artifact_name`     | Name of the prepared articact the Lambda Layer zip file should be uploaded to |
-| `zip_file_name`     | Name of the zip file that will be created                                     |
-| `build_cache_key`   | Build cache key                                                               |
-| `build_cache_paths` | Paths of the build cache                                                      |
+| name                | description                                                                                                                                      |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `artifact_name`     | Name of the prepared articact the Lambda Layer zip file should be uploaded to                                                                    |
+| `zip_file_name`     | Name of the zip file that will be created                                                                                                        |
+| `build_cache_key`   | Build cache key                                                                                                                                  |
+| `build_cache_paths` | Paths of the build cache                                                                                                                         |
+| `debug_enabled`     | If set to "true" debugging is enabled and you can log into the running action. (See https://github.com/marketplace/actions/debugging-with-tmate) |
+
+## Testing
+
+If you want to see an example of a zip file this action can create looks like you can manually run the GitHub action "Test Production". This will create a dummy lambda layer (just containing one placeholder file) and the latest [relay](https://github.com/getsentry/relay) based Sentry Lambda Extension. After the GitHub action has run, you can download the generated artifact at the bottom of the summary page of the GitHub action result.
 
 ## Contributing
 

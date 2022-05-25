@@ -1,12 +1,12 @@
-name: Test
+name: Test Production
 
 on:
   workflow_dispatch:
     inputs:
       debug_enabled:
-        description: "Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)"
+        description: "Run the build with tmate debugging enabled (true/false)?  (see https://github.com/marketplace/actions/debugging-with-tmate)"
         required: false
-        default: false
+        default: "false"
 
 env:
   BUILD_CACHE_KEY: ${{ github.sha }}
@@ -16,7 +16,7 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    name: "Test Lambda Layer Build"
+    name: "Test Lambda Layer Build (the current v1 that is in production, not the code from the branch)"
     steps:
       - name: Setup build cache
         uses: actions/cache@v2
@@ -36,3 +36,4 @@ jobs:
           zip_file_name: test-aws-lambda-layer.zip
           build_cache_paths: ${{ env.CACHED_BUILD_PATHS }}
           build_cache_key: ${{ env.BUILD_CACHE_KEY }}
+          debug_enabled: ${{ github.event.inputs.debug_enabled }}
