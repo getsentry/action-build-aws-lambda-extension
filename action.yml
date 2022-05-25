@@ -1,29 +1,28 @@
 name: "Build AWS Lambda Layer"
 description: "Creates a Lambda layer including the Sentry SDK and the Sentry Lambda extension."
+
 inputs:
   artifact_name:
-    description: Name of the prepared articact the Lambda Layer zip file should be uploaded to
+    description: "Name of the prepared articact the Lambda Layer zip file should be uploaded to"
     required: true
   zip_file_name:
-    description: Name of the zip file that will be created
+    description: "Name of the zip file that will be created"
     required: true
   build_cache_key:
-    description: Build cache key
+    description: "Build cache key"
     required: true
   build_cache_paths:
-    description: Paths of the build cache
+    description: "Paths of the build cache"
     required: true
-on:
-  workflow_dispatch:
-    inputs:
-      debug_enabled:
-        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'     
-        required: false
-        default: false
+  debug_enabled:
+    description: 'Run the build with tmate debugging enabled? (https://github.com/marketplace/actions/debugging-with-tmate)'
+    required: false
+    default: "false"
+
 runs:
   using: "composite"
   steps:
-    - name: Check build cache
+    - name: "Check build cache"
       uses: actions/cache@v2
       id: cache_built_packages
       with:
@@ -44,16 +43,16 @@ runs:
       run: |
         echo "Creating start script..."
         cat > dist-serverless/extensions/sentry-lambda-extension << EOT
-#!/usr/bin/env bash
-set -euo pipefail
-./relay run
+        #!/usr/bin/env bash
+        set -euo pipefail
+        ./relay run
         EOT
         chmod +x dist-serverless/extensions/sentry-lambda-extension
         echo "Done creating start script."
-    - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled }}        
-    - name: Create Lambda Layer zip
+    - name: "Setup tmate session"
+      uses: mxschmitt/action-tmate@v3
+      if: ${{ inputs.debug_enabled == 'true' }}
+    - name: "Create Lambda Layer zip"
       shell: bash
       run: |
         echo "Creating ${{ inputs.zip_file_name }}..."
@@ -65,10 +64,10 @@ set -euo pipefail
 
         echo "Contents of the created zip file:"
         unzip -Z ${{ inputs.zip_file_name }}
-    - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled }}        
-    - name: Upload zip (will be picked up by Craft for deployment)
+    - name: "Setup tmate session"
+      uses: mxschmitt/action-tmate@v3
+      if: ${{ inputs.debug_enabled == 'true' }}
+    - name: "Upload zip (will be picked up by Craft for deployment)"
       uses: actions/upload-artifact@v3
       with:
         name: ${{ inputs.artifact_name }}

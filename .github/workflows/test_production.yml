@@ -1,0 +1,39 @@
+name: Test Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      debug_enabled:
+        description: "Run the build with tmate debugging enabled (true/false)?  (see https://github.com/marketplace/actions/debugging-with-tmate)"
+        required: false
+        default: "false"
+
+env:
+  BUILD_CACHE_KEY: ${{ github.sha }}
+  CACHED_BUILD_PATHS: |
+    ${{ github.workspace }}/dist-serverless
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: "Test Lambda Layer Build (the current v1 that is in production, not the code from the branch)"
+    steps:
+      - name: Setup build cache
+        uses: actions/cache@v2
+        id: build_cache
+        with:
+          path: ${{ env.CACHED_BUILD_PATHS }}
+          key: ${{ env.BUILD_CACHE_KEY }}
+      - name: Create dummy Lambda Layer
+        run: |
+          echo "Creating a dummy Lambda layer in the /dist-serverless directory..."
+          mkdir -p dist-serverless
+          touch dist-serverless/PUT_LAYER_CODE_HERE
+          echo "Done creating a dummy Lambda layer in the /dist-serverless directory."
+      - uses: getsentry/action-build-aws-lambda-extension@v1
+        with:
+          artifact_name: ${{ github.sha }}
+          zip_file_name: test-aws-lambda-layer.zip
+          build_cache_paths: ${{ env.CACHED_BUILD_PATHS }}
+          build_cache_key: ${{ env.BUILD_CACHE_KEY }}
+          debug_enabled: ${{ github.event.inputs.debug_enabled }}
