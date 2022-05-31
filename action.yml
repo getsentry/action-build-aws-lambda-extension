@@ -45,7 +45,7 @@ runs:
         cat > dist-serverless/extensions/sentry-lambda-extension << EOT
         #!/usr/bin/env bash
         set -euo pipefail
-        ./relay run
+        ./relay run --mode proxy --aws-runtime-api=$AWS_LAMBDA_RUNTIME_API --shutdown-timeout=2
         EOT
         chmod +x dist-serverless/extensions/sentry-lambda-extension
         echo "Done creating start script."
