@@ -35,7 +35,7 @@ runs:
         mkdir -p dist-serverless/extensions
         curl -0 --silent \
             --output dist-serverless/extensions/relay \
-            `curl -s https://release-registry.services.sentry.io/apps/relay/latest | jq -r .files.\"relay-Linux-x86_64\".url`
+            "$(curl -s https://release-registry.services.sentry.io/apps/relay/latest | jq -r .files.\"relay-Linux-x86_64\".url)"
         chmod +x dist-serverless/extensions/relay
         echo "Done downloading relay."
     - name: Configure Lambda extension to start relay
