@@ -32,20 +32,21 @@ runs:
       shell: bash
       run: |
         echo "Downloading relay..."
-        mkdir -p dist-serverless/extensions
+        mkdir -p dist-serverless/relay
         curl -0 --silent \
-            --output dist-serverless/extensions/relay \
-            "$(curl -s https://release-registry.services.sentry.io/apps/relay/latest | jq -r .files.\"relay-Linux-x86_64\".url)"
-        chmod +x dist-serverless/extensions/relay
+          --output dist-serverless/relay/relay \
+          "$(curl -s https://release-registry.services.sentry.io/apps/relay/latest | jq -r .files.\"relay-Linux-x86_64\".url)"
+        chmod +x dist-serverless/relay/relay
         echo "Done downloading relay."
     - name: Configure Lambda extension to start relay
       shell: bash
       run: |
         echo "Creating start script..."
+        mkdir -p dist-serverless/extensions
         cat > dist-serverless/extensions/sentry-lambda-extension << EOT
-        #!/usr/bin/env bash
-        set -euo pipefail
-        ./relay run --mode proxy --aws-runtime-api=$AWS_LAMBDA_RUNTIME_API --shutdown-timeout=2
+        #!/bin/bash
+        set -xeuo pipefail
+        exec /opt/relay/relay run --mode=proxy --shutdown-timeout=2 --aws-runtime-api="\$AWS_LAMBDA_RUNTIME_API"
         EOT
         chmod +x dist-serverless/extensions/sentry-lambda-extension
         echo "Done creating start script."
