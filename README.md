@@ -63,7 +63,7 @@ The following are all _required_.
 
 ## Testing
 
-If you want to see an example of a zip file this action can create looks like you can manually run the GitHub action "Test Production". This will create a dummy lambda layer (just containing one placeholder file) and the latest [relay](https://github.com/getsentry/relay) based Sentry Lambda Extension. After the GitHub action has run, you can download the generated artifact at the bottom of the summary page of the GitHub action result.
+If you want to see what an example of a zip file created by this action looks like you can manually run the GitHub action "Test Production". This will create a dummy lambda layer (just containing one placeholder file) and the latest [relay](https://github.com/getsentry/relay) based Sentry Lambda Extension. After the GitHub action has run, you can download the generated artifact at the bottom of the summary page of the GitHub action result.
 
 ## Contributing
 
