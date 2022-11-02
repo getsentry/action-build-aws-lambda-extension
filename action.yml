@@ -48,6 +48,7 @@ runs:
         set -euo pipefail
         exec /opt/relay/relay run \
             --mode=proxy \
+            --port=5333 \
             --shutdown-timeout=2 \
             --upstream-dsn="\$SENTRY_DSN" \
             --aws-runtime-api="\$AWS_LAMBDA_RUNTIME_API"
